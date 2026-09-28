@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ChicChic Pet Snack  | Freeze-Dried Pet Treats</title>
+
+  <meta
+    name="description"
+    content="อาหารและขนมสัตว์เลี้ยง Freeze-Dried คุณภาพดี สำหรับน้องหมาและน้องแมว ผลิตจากวัตถุดิบที่คัดสรรอย่างใส่ใจ"
+  />
+
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Alpine.js -->
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+  ></script>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Noto Sans Thai", "sans-serif"],
+          },
+          colors: {
+            brand: {
+              50: "#f2fbf7",
+              100: "#dff6e9",
+              200: "#c0ecd4",
+              300: "#91dbb5",
+              400: "#5cc391",
+              500: "#35a873",
+              600: "#27875c",
+              700: "#226c4d",
+              800: "#1e563f",
+              900: "#194735",
+            },
+            line: "#06C755",
+          },
+          boxShadow: {
+            soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Noto Sans Thai", sans-serif;
+    }
+
+    [x-cloak] {
+      display: none !important;
+    }
+
+    .section-anchor {
+      scroll-margin-top: 90px;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-white text-slate-800 antialiased"
+  x-data="petFoodApp()"
+>
+  <!-- =========================================================
+       NAVBAR
+  ========================================================== -->
+  <header
+    class="sticky top-0 z-40 border-b border-slate-100 bg-white/95 backdrop-blur"
+  >
+    <nav
+      class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8"
+      aria-label="Main navigation"
+    >
+      <!-- Logo -->
+      <a
+        href="#home"
+        class="flex items-center gap-3"
+        aria-label="CoolCool Home"
+      >
+        <div
+          class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-extrabold text-white"
+        >
+          C
+        </div>
+
+        <div class="leading-tight">
+          <p class="text-lg font-extrabold text-slate-900">
+            CoolCool
+          </p>
+          <p class="text-xs text-slate-500">
+            Pet Food
+          </p>
+        </div>
+      </a>
+
+      <!-- Desktop Menu -->
+      <div class="hidden items-center gap-7 md:flex">
+        <template x-for="item in navigation" :key="item.label">
+          <a
+            :href="item.href"
+            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
+            x-text="item.label"
+          ></a>
+        </template>
+
+        <a
+          :href="lineOAUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-xl bg-line px-5 py-3 text-sm font-bold text-white transition hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-green-100"
+        >
+          Contact via LINE OA
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <button
+        type="button"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-700 md:hidden"
+        @click="mobileMenuOpen = !mobileMenuOpen"
+        :aria-expanded="mobileMenuOpen"
+        aria-label="Toggle navigation menu"
+      >
+        <svg
+          x-show="!mobileMenuOpen"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+          />
+        </svg>
+
+        <svg
+          x-show="mobileMenuOpen"
+          x-cloak
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="h-6 w-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    <div
+      x-show="mobileMenuOpen"
+      x-cloak
+      x-transition
+      @click.outside="mobileMenuOpen = false"
+      class="border-t border-slate-100 bg-white md:hidden"
+    >
+      <div class="space-y-1 px-4 py-4">
+        <template x-for="item in navigation" :key="item.label">
+          <a
+            :href="item.href"
+            @click="mobileMenuOpen = false"
+            class="block rounded-xl px-4 py-3 font-medium text-slate-700 hover:bg-slate-50"
+            x-text="item.label"
+          ></a>
+        </template>
+
+        <a
+          :href="lineOAUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-3 flex w-full items-center justify-center rounded-xl bg-line px-5 py-3.5 font-bold text-white"
+        >
+          Contact via LINE OA
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+    <section
+      id="home"
+      class="section-anchor overflow-hidden bg-gradient-to-b from-brand-50 to-white"
+    >
+      <div
+        class="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:px-8 lg:py-24"
+      >
+        <!-- Hero Content -->
+        <div>
+          <span
+            class="inline-flex rounded-full bg-brand-100 px-3 py-1.5 text-xs font-bold text-brand-700 sm:text-sm"
+          >
+            Freeze-Dried Pet Food & Treats
+          </span>
+
+          <h1
+            class="mt-5 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl"
+          >
+            อร่อย ง่าย
+            <span class="text-brand-600">
+              และดีต่อสัตว์เลี้ยงที่คุณรัก
+            </span>
+          </h1>
+
+          <p
+            class="mt-5 max-w-xl text-base leading-8 text-slate-600 sm:text-lg"
+          >
+            ขนมสัตว์เลี้ยง Freeze-Dried ผลิตจากวัตถุดิบคุณภาพ
+            คัดสรรอย่างใส่ใจ เพื่อให้ทุกมื้อเป็นทั้งความสุขและความมั่นใจ
+            สำหรับเจ้าของสัตว์เลี้ยง
+          </p>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#products"
+              class="inline-flex min-h-[52px] items-center justify-center rounded-2xl bg-brand-600 px-6 py-3.5 font-bold text-white shadow-lg shadow-brand-600/20 transition hover:bg-brand-700"
+            >
+              ดูสินค้าทั้งหมด
+            </a>
+
+            <a
+              :href="lineOAUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-2xl border border-green-200 bg-white px-6 py-3.5 font-bold text-line transition hover:bg-green-50"
+            >
+              <svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 2C6.477 2 2 5.806 2 10.5c0 4.201 3.574 7.725 8.402 8.392.327.071.772.216.885.497.102.255.067.654.033.911l-.143.861c-.044.255-.202.998.875.544 1.078-.454 5.817-3.425 7.937-5.863C21.453 14.24 22 12.457 22 10.5 22 5.806 17.523 2 12 2Z"
+                />
+              </svg>
+
+              ติดต่อ LINE OA
+            </a>
+          </div>
+
+          <!-- Trust indicators -->
+          <div
+            class="mt-9 grid max-w-xl grid-cols-3 gap-3 border-t border-slate-200 pt-6"
+          >
+            <div>
+              <p class="text-lg font-extrabold text-slate-900">
+                100%
+              </p>
+              <p class="mt-1 text-xs text-slate-500">
+                คัดสรรวัตถุดิบ
+              </p>
+            </div>
+
+            <div>
+              <p class="text-lg font-extrabold text-slate-900">
+                7+
+              </p>
+              <p class="mt-1 text-xs text-slate-500">
+                สินค้าให้เลือก
+              </p>
+            </div>
+
+            <div>
+              <p class="text-lg font-extrabold text-slate-900">
+                LINE OA
+              </p>
+              <p class="mt-1 text-xs text-slate-500">
+                สั่งซื้อง่าย
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual -->
+        <div class="relative">
+          <div
+            class="absolute -left-8 top-10 h-40 w-40 rounded-full bg-brand-200/50 blur-3xl"
+          ></div>
+
+          <div
+            class="absolute -right-8 bottom-8 h-40 w-40 rounded-full bg-amber-100 blur-3xl"
+          ></div>
+
+          <div
+            class="relative overflow-hidden rounded-[2rem] border border-white bg-white p-3 shadow-soft"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=85"
+              alt="Happy pets"
+              class="aspect-[4/3] w-full rounded-[1.5rem] object-cover"
+              loading="eager"
+            />
+
+            <div
+              class="absolute bottom-6 left-6 right-6 rounded-2xl bg-white/90 p-4 shadow-lg backdrop-blur"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700"
+                >
+                  ✓
+                </div>
+
+                <div>
+                  <p class="font-bold text-slate-900">
+                    คุณภาพที่ไว้ใจได้
+                  </p>
+                  <p class="text-sm text-slate-500">
+                    สำหรับสมาชิกสี่ขาในทุกวัน
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         PRODUCTS
+    ========================================================== -->
+    <section
+      id="products"
+      class="section-anchor bg-slate-50 py-16 sm:py-20"
+    >
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+        >
+          <div>
+            <p
+              class="text-sm font-bold uppercase tracking-wider text-brand-600"
+            >
+              Product Catalog
+            </p>
+
+            <h2
+              class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl"
+            >
+              สินค้าของเรา
+            </h2>
+
+            <p class="mt-3 max-w-2xl leading-7 text-slate-600">
+              เลือกสินค้าที่เหมาะกับน้องหมาและน้องแมว
+              หากต้องการสอบถามรายละเอียดหรือสั่งซื้อ
+              สามารถติดต่อผ่าน LINE OA ได้โดยตรง
+            </p>
+          </div>
+
+          <p class="text-sm text-slate-500">
+            <span x-text="products.length"></span> รายการสินค้า
+          </p>
+        </div>
+
+        <!-- Product Grid -->
+        <div
+          class="mt-9 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          <template x-for="product in products" :key="product.id">
+            <article
+              class="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-soft"
+            >
+              <!-- Product Image -->
+              <div class="overflow-hidden bg-slate-100">
+                <img
+                  :src="product.image_url"
+                  :alt="product.name"
+                  class="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+
+              <!-- Content -->
+              <div class="flex flex-1 flex-col p-5">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <h3
+                      class="text-lg font-bold leading-snug text-slate-900"
+                      x-text="product.name"
+                    ></h3>
+
+                    <p
+                      class="mt-1 text-sm font-medium text-slate-500"
+                      x-text="product.weight"
+                    ></p>
+                  </div>
+
+                  <p
+                    class="shrink-0 text-lg font-extrabold text-brand-700"
+                    x-text="formatPrice(product.price)"
+                  ></p>
+                </div>
+
+                <p
+                  class="mt-4 flex-1 text-sm leading-6 text-slate-600"
+                  x-text="product.description"
+                ></p>
+
+                <a
+                  :href="getProductLineUrl(product)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-5 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-line px-4 py-3 text-sm font-bold text-white transition hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-green-100"
+                >
+                  <svg
+                    class="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 2C6.477 2 2 5.806 2 10.5c0 4.201 3.574 7.725 8.402 8.392.327.071.772.216.885.497.102.255.067.654.033.911l-.143.861c-.044.255-.202.998.875.544 1.078-.454 5.817-3.425 7.937-5.863C21.453 14.24 22 12.457 22 10.5 22 5.806 17.523 2 12 2Z"
+                    />
+                  </svg>
+
+                  สอบถาม / สั่งซื้อ
+                </a>
+              </div>
+            </article>
+          </template>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         ABOUT
+    ========================================================== -->
+    <section
+      id="about"
+      class="section-anchor py-16 sm:py-20"
+    >
+      <div
+        class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-8"
+      >
+        <div>
+          <p
+            class="text-sm font-bold uppercase tracking-wider text-brand-600"
+          >
+            About Us
+          </p>
+
+          <h2
+            class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl"
+          >
+            เราเชื่อว่าอาหารที่ดี
+            เริ่มจากวัตถุดิบที่ดี
+          </h2>
+
+          <p class="mt-5 leading-8 text-slate-600">
+            CoolCool Pet Food
+            มุ่งเน้นการพัฒนาขนมและอาหารสัตว์เลี้ยงที่ใช้งานง่าย
+            คุณภาพสม่ำเสมอ และเหมาะกับไลฟ์สไตล์ของเจ้าของสัตว์เลี้ยงยุคใหม่
+          </p>
+
+          <p class="mt-4 leading-8 text-slate-600">
+            เราใส่ใจตั้งแต่การเลือกวัตถุดิบ กระบวนการผลิต
+            ไปจนถึงการส่งมอบสินค้า
+            เพื่อสร้างผลิตภัณฑ์ที่ทั้งสัตว์เลี้ยงชอบและเจ้าของมั่นใจ
+          </p>
+
+          <a
+            :href="lineOAUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-7 inline-flex min-h-[50px] items-center justify-center rounded-xl bg-brand-600 px-6 py-3.5 font-bold text-white transition hover:bg-brand-700"
+          >
+            ติดต่อทีมงาน
+          </a>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-3xl bg-brand-50 p-6">
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-600 font-extrabold text-white"
+            >
+              01
+            </div>
+
+            <h3 class="mt-5 text-lg font-bold text-slate-900">
+              Quality Ingredients
+            </h3>
+
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              คัดเลือกวัตถุดิบโดยให้ความสำคัญกับคุณภาพและความสม่ำเสมอ
+            </p>
+          </div>
+
+          <div class="rounded-3xl bg-amber-50 p-6">
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 font-extrabold text-white"
+            >
+              02
+            </div>
+
+            <h3 class="mt-5 text-lg font-bold text-slate-900">
+              Pet First
+            </h3>
+
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              ออกแบบผลิตภัณฑ์โดยคำนึงถึงความเหมาะสมและประสบการณ์ของสัตว์เลี้ยง
+            </p>
+          </div>
+
+          <div class="rounded-3xl bg-blue-50 p-6">
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500 font-extrabold text-white"
+            >
+              03
+            </div>
+
+            <h3 class="mt-5 text-lg font-bold text-slate-900">
+              Reliable Service
+            </h3>
+
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              มีทีมงานให้ข้อมูลสินค้าและดูแลลูกค้าผ่านช่องทางที่เข้าถึงง่าย
+            </p>
+          </div>
+
+          <div class="rounded-3xl bg-rose-50 p-6">
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-500 font-extrabold text-white"
+            >
+              04
+            </div>
+
+            <h3 class="mt-5 text-lg font-bold text-slate-900">
+              Built on Trust
+            </h3>
+
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              ให้ความสำคัญกับความโปร่งใส คุณภาพสินค้า
+              และความสัมพันธ์ระยะยาวกับลูกค้า
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         CONTACT
+    ========================================================== -->
+    <section
+      id="contact"
+      class="section-anchor bg-slate-900 py-16 text-white sm:py-20"
+    >
+      <div
+        class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8"
+      >
+        <div>
+          <p
+            class="text-sm font-bold uppercase tracking-wider text-brand-300"
+          >
+            Contact
+          </p>
+
+          <h2
+            class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl"
+          >
+            ต้องการข้อมูลเพิ่มเติม?
+          </h2>
+
+          <p
+            class="mt-4 max-w-xl leading-8 text-slate-300"
+          >
+            ติดต่อสอบถามสินค้า ราคา
+            หรือข้อมูลสำหรับร้านค้าและตัวแทนจำหน่ายผ่าน LINE OA ได้โดยตรง
+          </p>
+
+          <a
+            :href="lineOAUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-7 inline-flex min-h-[54px] items-center justify-center gap-2 rounded-2xl bg-line px-7 py-4 font-bold text-white transition hover:opacity-90"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 2C6.477 2 2 5.806 2 10.5c0 4.201 3.574 7.725 8.402 8.392.327.071.772.216.885.497.102.255.067.654.033.911l-.143.861c-.044.255-.202.998.875.544 1.078-.454 5.817-3.425 7.937-5.863C21.453 14.24 22 12.457 22 10.5 22 5.806 17.523 2 12 2Z"
+              />
+            </svg>
+
+            Contact via LINE OA
+          </a>
+        </div>
+
+        <!-- Company Details -->
+        <div
+          class="rounded-3xl border border-slate-700 bg-slate-800 p-6 sm:p-8"
+        >
+          <dl class="space-y-6">
+            <div>
+              <dt class="text-sm font-bold text-slate-400">
+                ADDRESS
+              </dt>
+              <dd class="mt-2 leading-7 text-slate-100">
+                114/2 ม.2 ต.กุดหมากไฟ อ.หนอวัวซอ จ.อุดรธานี 41220 
+              </dd>
+            </div>
+
+            <div>
+              <dt class="text-sm font-bold text-slate-400">
+                EMAIL
+              </dt>
+              <dd class="mt-2">
+                <a
+                  href="mailto:hello@coolcoolpetfood.com"
+                  class="text-slate-100 hover:text-brand-300"
+                >
+                  hello@coolcoolpetfood.com
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="text-sm font-bold text-slate-400">
+                PHONE
+              </dt>
+              <dd class="mt-2">
+                <a
+                  href="tel:+0932239287"
+                  class="text-slate-100 hover:text-brand-300"
+                >
+                  081-234-5678
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="text-sm font-bold text-slate-400">
+                BUSINESS HOURS
+              </dt>
+              <dd class="mt-2 leading-7 text-slate-100">
+                Monday - Saturday<br />
+                08:00 - 17:00
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================== -->
+  <footer class="bg-slate-950 pb-24 pt-8 text-slate-400 sm:pb-8">
+    <div
+      class="mx-auto flex max-w-7xl flex-col gap-4 px-4 text-sm sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8"
+    >
+      <p>
+        © <span x-text="new Date().getFullYear()"></span>
+        CoolCool Pet Food. All rights reserved.
+      </p>
+
+      <div class="flex flex-wrap gap-5">
+        <a href="#home" class="hover:text-white">
+          Home
+        </a>
+        <a href="#products" class="hover:text-white">
+          Products
+        </a>
+        <a href="#about" class="hover:text-white">
+          About
+        </a>
+        <a href="#contact" class="hover:text-white">
+          Contact
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       FLOATING LINE OA BUTTON
+  ========================================================== -->
+  <a
+    :href="lineOAUrl"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Contact via LINE OA"
+    class="fixed bottom-5 right-4 z-50 flex min-h-[56px] items-center gap-2 rounded-full bg-line px-5 py-3 font-bold text-white shadow-xl shadow-green-900/20 transition hover:-translate-y-1 hover:shadow-2xl sm:bottom-6 sm:right-6"
+  >
+    <svg
+      class="h-6 w-6"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 2C6.477 2 2 5.806 2 10.5c0 4.201 3.574 7.725 8.402 8.392.327.071.772.216.885.497.102.255.067.654.033.911l-.143.861c-.044.255-.202.998.875.544 1.078-.454 5.817-3.425 7.937-5.863C21.453 14.24 22 12.457 22 10.5 22 5.806 17.523 2 12 2Z"
+      />
+    </svg>
+
+    <span class="hidden sm:inline">
+      LINE OA
+    </span>
+
+    <span class="sm:hidden">
+      LINE
+    </span>
+  </a>
+
+  <!-- =========================================================
+       ALPINE.JS APPLICATION
+  ========================================================== -->
+  <script>
+    function petFoodApp() {
+      return {
+        mobileMenuOpen: false,
+
+        /*
+          Replace this URL with your real LINE OA URL.
+
+          Example:
+          https://lin.ee/xxxxxxxx
+        */
+        lineOAUrl: "https://lin.ee/V0HEmO0",
+
+        navigation: [
+          {
+            label: "Home",
+            href: "#home",
+          },
+          {
+            label: "Products",
+            href: "#products",
+          },
+          {
+            label: "About",
+            href: "#about",
+          },
+          {
+            label: "Contact",
+            href: "#contact",
+          },
+        ],
+
+        /*
+          STATIC PRODUCT JSON
+          -----------------------------------------------------
+          This can later be replaced by an API response,
+          CMS export, or generated JSON file without changing
+          the HTML product-card markup.
+        */
+
+        products: [
+          {
+            id: 1,
+            name: "Freeze-Dried Salmon",
+            price: 69,
+            weight: "40 g",
+            description:
+              "แซลมอนฟรีซดราย เหมาะสำหรับใช้เป็นขนมหรือท็อปปิ้งในมื้ออาหาร หรือละลายกับน้ำเปลี่ยนน้ำธรรมดาเป็นน้ำซุปแสนอร่อยย",
+            image_url:
+              "salmon.jpg",
+          },
+          {
+            id: 2,
+            name: "Freeze-Dried Chicken",
+            price: 69,
+            weight: "40 g",
+            description:
+              "เนื้อไก่ฟรีซดราย กลิ่นหอม รับประทานง่าย เหมาะกับทั้งน้องหมาและน้องแมว",
+            image_url:
+                "chicken.jpg",
+          },
+          {
+            id: 3,
+            name: "Freeze-Dried Chicken+CatGrass ",
+            price: 69,
+            weight: "40 g",
+            description:
+              "เนื้อไก่ผสมต้นอ่อนข้าวสาลี  เพิ่มความหลากหลายให้กับมื้ออาหารและเวลาขนม",
+            image_url:
+              "catgrass.jpg",
+          },
+          {
+            id: 4,
+            name: "Freeze-Dried LIVER",
+            price: 69,
+            weight: "40 g",
+            description:
+              "ตับไก่ฟรีซดราย กลิ่นตับชัดเจน ใช้เป็นขนมหรือรางวัลระหว่างการฝึกได้ หรือละลายกับน้ำเปลี่ยนน้ำธรรมดาเป็นน้ำซุปแสนอร่อยย",
+            image_url:
+                 "liver.jpg",
+          },
+          {
+            id: 5,
+            name: "Freeze-Dried 3 Mix",
+            price: 69,
+            weight: "40 g",
+            description:
+              "ไก่ไข่ตับ รวม 3 คุณประโยชน์เข้าด้วยกัน โปรตีน ไขมันดี และธาตุเหล็ก เพื่อให้ลูกมีสุขภาพที่แข็งแรง",
+            image_url:
+                 "3mix.jpg",
+          },
+          {
+            id: 6,
+            name: "Freeze-Dried Capelin",
+            price: 69,
+            weight: "40 g",
+            description:
+              "ปลาตัวเล็กฟรีซดราย รับประทานง่ายและสะดวก สามารถใช้เป็นขนมหรือเพิ่มความน่าสนใจในมื้ออาหาร",
+            image_url:
+              "capelin.jpg",
+
+          },
+          {
+            id: 7,
+            name: "Freeze-Dried 5 MIX",
+            price: 69,
+            weight: "40 g",
+            description:
+              "เพิ่มรสชาติสัมผัสที่หลากหลายให้กับมืออาหารหรือขนมของลูกรัก ",
+            image_url:
+              "5mix.jpg",
+          },
+        ],
+
+        formatPrice(price) {
+          return new Intl.NumberFormat("th-TH", {
+            style: "currency",
+            currency: "THB",
+            minimumFractionDigits: 0,
+          }).format(price);
+        },
+
+        getProductLineUrl(product) {
+          /*
+            For a normal LINE OA URL this simply opens LINE OA.
+
+            If you later use a provider that supports pre-filled
+            messages, this function is where product-specific
+            tracking/message parameters can be added.
+          */
+
+          return this.lineOAUrl;
+        },
+      };
+    }
+  </script>
+</body>
+</html>
